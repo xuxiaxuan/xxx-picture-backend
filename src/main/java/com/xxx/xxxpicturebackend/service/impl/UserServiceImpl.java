@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xxx.xxxpicturebackend.exception.BusinessException;
 import com.xxx.xxxpicturebackend.exception.ErrorCode;
-import com.xxx.xxxpicturebackend.model.dto.UserQueryRequest;
+import com.xxx.xxxpicturebackend.model.dto.user.UserQueryRequest;
 import com.xxx.xxxpicturebackend.model.entity.domain.User;
 import com.xxx.xxxpicturebackend.model.enums.UserRoleEnum;
 import com.xxx.xxxpicturebackend.model.vo.LoginUserVo;
@@ -44,10 +44,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (StrUtil.hasBlank(userAccount, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
-        if (userAccount.length() < 4) {
+        if (userAccount.length() < 3) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号过短");
         }
-        if (userPassword.length() < 8 || checkPassword.length() < 8) {
+        if (userPassword.length() < 6 || checkPassword.length() < 6) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
         }
         if (!userPassword.equals(checkPassword)) {
@@ -191,6 +191,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return queryWrapper;
     }
 
+    @Override
+    public boolean isAdmin(User user) {
+        return user != null && UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
+    }
 
 }
 

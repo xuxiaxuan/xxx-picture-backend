@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: /api
 spring:
+  profiles:
+    active: local
   application:
     name: xxx-picture-backend
   datasource:
@@ -10,6 +12,11 @@ spring:
     url: jdbc:mysql://localhost:3306/xxx_picture
     username: root
     password: 050710xxx
+  # 开放更大的文件上传体积
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: false

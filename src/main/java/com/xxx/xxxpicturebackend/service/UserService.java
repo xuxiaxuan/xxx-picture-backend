@@ -1,7 +1,7 @@
 package com.xxx.xxxpicturebackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.xxx.xxxpicturebackend.model.dto.UserQueryRequest;
+import com.xxx.xxxpicturebackend.model.dto.user.UserQueryRequest;
 import com.xxx.xxxpicturebackend.model.entity.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xxx.xxxpicturebackend.model.vo.LoginUserVo;
@@ -39,6 +39,7 @@ public interface UserService extends IService<User> {
      */
     LoginUserVo userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
+
     /**
      * 获取当前登录用户
      *
@@ -63,4 +64,13 @@ public interface UserService extends IService<User> {
     List<UserVO> getUserVOList(List<User> userList);
 
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 是否为管理员
+     *
+     * @param user
+     * @return
+     */
+    boolean isAdmin(User user);
+
 }

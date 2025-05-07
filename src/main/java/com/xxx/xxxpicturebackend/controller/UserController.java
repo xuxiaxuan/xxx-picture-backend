@@ -9,7 +9,7 @@ import com.xxx.xxxpicturebackend.constant.UserConstant;
 import com.xxx.xxxpicturebackend.exception.BusinessException;
 import com.xxx.xxxpicturebackend.exception.ErrorCode;
 import com.xxx.xxxpicturebackend.exception.ThrowUtils;
-import com.xxx.xxxpicturebackend.model.dto.*;
+import com.xxx.xxxpicturebackend.model.dto.user.*;
 import com.xxx.xxxpicturebackend.model.entity.domain.User;
 import com.xxx.xxxpicturebackend.model.vo.LoginUserVo;
 import com.xxx.xxxpicturebackend.model.vo.UserVO;
@@ -127,6 +127,14 @@ public class UserController {
         boolean b = userService.removeById(deleteRequest.getId());
         return ResultUtils.success(b);
     }
+
+    @GetMapping("/get/login")
+    public BaseResponse<LoginUserVo> getLoginUser(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(loginUser));
+    }
+
+
 
     /**
      * 更新用户

@@ -1,4 +1,4 @@
-package com.xxx.xxxpicturebackend.model.dto;
+package com.xxx.xxxpicturebackend.model.dto.user;
 
 import lombok.Data;
 
