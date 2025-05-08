@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xxx.xxxpicturebackend.mapper.PictureMapper">
 
-    <resultMap id="BaseResultMap" type="generator.domain.Picture">
+    <resultMap id="BaseResultMap" type="com.xxx.xxxpicturebackend.model.entity.domain.Picture">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
