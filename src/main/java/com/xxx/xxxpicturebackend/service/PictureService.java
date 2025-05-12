@@ -3,13 +3,11 @@ package com.xxx.xxxpicturebackend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xxx.xxxpicturebackend.model.dto.picture.PictureQueryRequest;
-import com.xxx.xxxpicturebackend.model.dto.picture.PictureReviewRequest;
-import com.xxx.xxxpicturebackend.model.dto.picture.PictureUploadByBatchRequest;
-import com.xxx.xxxpicturebackend.model.dto.picture.PictureUploadRequest;
+import com.xxx.xxxpicturebackend.model.dto.picture.*;
 import com.xxx.xxxpicturebackend.model.entity.domain.Picture;
 import com.xxx.xxxpicturebackend.model.entity.domain.User;
 import com.xxx.xxxpicturebackend.model.vo.PictureVO;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,4 +61,12 @@ public interface PictureService extends IService<Picture> {
             User loginUser
     );
 
+    @Async
+    void clearPictureFile(Picture oldPicture);
+
+    void checkPictureAuth(User loginUser, Picture picture);
+
+    void deletePicture(long pictureId, User loginUser);
+
+    void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
 }
