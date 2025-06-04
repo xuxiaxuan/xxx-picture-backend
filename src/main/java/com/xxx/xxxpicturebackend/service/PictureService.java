@@ -7,22 +7,28 @@ import com.xxx.xxxpicturebackend.model.dto.picture.*;
 import com.xxx.xxxpicturebackend.model.entity.domain.Picture;
 import com.xxx.xxxpicturebackend.model.entity.domain.User;
 import com.xxx.xxxpicturebackend.model.vo.PictureVO;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
- * @Description: // 类说明，在创建类时要填写
- * @ClassName: PictureService    // 类名，会自动填充
- * @Author: 许夏轩          // 创建者
- * @Date: 07/05/2025 6:42 PM   // 时间
- * @Version: 1.0     // 版本
+ * @author 李鱼皮
+ * @description 针对表【picture(图片)】的数据库操作Service
+ * @createDate 2024-12-11 20:45:51
  */
 public interface PictureService extends IService<Picture> {
 
     /**
+     * 校验图片
+     *
+     * @param picture
+     */
+    void validPicture(Picture picture);
+
+    /**
      * 上传图片
+     *
+     * @param inputSource          文件输入源
      * @param pictureUploadRequest
      * @param loginUser
      * @return
@@ -31,13 +37,32 @@ public interface PictureService extends IService<Picture> {
                             PictureUploadRequest pictureUploadRequest,
                             User loginUser);
 
-    QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
-
+    /**
+     * 获取图片包装类（单条）
+     *
+     * @param picture
+     * @param request
+     * @return
+     */
     PictureVO getPictureVO(Picture picture, HttpServletRequest request);
 
+    /**
+     * 获取图片包装类（分页）
+     *
+     * @param picturePage
+     * @param request
+     * @return
+     */
     Page<PictureVO> getPictureVOPage(Page<Picture> picturePage, HttpServletRequest request);
 
-    void validPicture(Picture picture);
+    /**
+     * 获取查询对象
+     *
+     * @param pictureQueryRequest
+     * @return
+     */
+    QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
+
 
     /**
      * 图片审核
@@ -47,6 +72,12 @@ public interface PictureService extends IService<Picture> {
      */
     void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser);
 
+    /**
+     * 填充审核参数
+     *
+     * @param picture
+     * @param loginUser
+     */
     void fillReviewParams(Picture picture, User loginUser);
 
     /**
@@ -56,17 +87,55 @@ public interface PictureService extends IService<Picture> {
      * @param loginUser
      * @return 成功创建的图片数
      */
-    Integer uploadPictureByBatch(
-            PictureUploadByBatchRequest pictureUploadByBatchRequest,
-            User loginUser
-    );
+    Integer uploadPictureByBatch(PictureUploadByBatchRequest pictureUploadByBatchRequest,
+                                 User loginUser);
 
-    @Async
+    /**
+     * 清理图片文件
+     *
+     * @param oldPicture
+     */
     void clearPictureFile(Picture oldPicture);
 
-    void checkPictureAuth(User loginUser, Picture picture);
-
+    /**
+     * 删除图片
+     *
+     * @param pictureId
+     * @param loginUser
+     */
     void deletePicture(long pictureId, User loginUser);
 
+    /**
+     * 编辑图片
+     *
+     * @param pictureEditRequest
+     * @param loginUser
+     */
     void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
+
+    /**
+     * 校验空间图片的权限
+     *
+     * @param loginUser
+     * @param picture
+     */
+    void checkPictureAuth(User loginUser, Picture picture);
+
+    /**
+     * 根据颜色搜索图片
+     *
+     * @param spaceId
+     * @param picColor
+     * @param loginUser
+     * @return
+     */
+    List<PictureVO> searchPictureByColor(Long spaceId, String picColor, User loginUser);
+
+    /**
+     * 批量编辑图片
+     *
+     * @param pictureEditByBatchRequest
+     * @param loginUser
+     */
+    void editPictureByBatch(PictureEditByBatchRequest pictureEditByBatchRequest, User loginUser);
 }

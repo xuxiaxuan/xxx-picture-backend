@@ -1,12 +1,16 @@
 package com.xxx.xxxpicturebackend.model.vo;
 
 import com.xxx.xxxpicturebackend.model.entity.domain.Space;
+import com.xxx.xxxpicturebackend.model.vo.UserVO;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 空间视图
+ */
 @Data
 public class SpaceVO implements Serializable {
     /**

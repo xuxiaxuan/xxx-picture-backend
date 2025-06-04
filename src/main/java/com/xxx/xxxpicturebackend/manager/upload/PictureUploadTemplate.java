@@ -9,6 +9,7 @@ import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.model.ciModel.persistence.CIObject;
 import com.qcloud.cos.model.ciModel.persistence.ImageInfo;
 import com.qcloud.cos.model.ciModel.persistence.ProcessResults;
+
 import com.xxx.xxxpicturebackend.config.CosClientConfig;
 import com.xxx.xxxpicturebackend.exception.BusinessException;
 import com.xxx.xxxpicturebackend.exception.ErrorCode;
@@ -21,14 +22,17 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 图片上传模板
+ */
 @Slf4j
 public abstract class PictureUploadTemplate {
 
     @Resource
-    protected CosManager cosManager;
+    private CosClientConfig cosClientConfig;
 
     @Resource
-    protected CosClientConfig cosClientConfig;
+    private CosManager cosManager;
 
     /**
      * 上传图片
@@ -84,6 +88,21 @@ public abstract class PictureUploadTemplate {
     }
 
     /**
+     * 校验输入源（本地文件或 URL）
+     */
+    protected abstract void validPicture(Object inputSource);
+
+    /**
+     * 获取输入源的原始文件名
+     */
+    protected abstract String getOriginFilename(Object inputSource);
+
+    /**
+     * 处理输入源并生成本地临时文件
+     */
+    protected abstract void processFile(Object inputSource, File file) throws Exception;
+
+    /**
      * 封装返回结果
      *
      * @param originalFilename   原始文件名
@@ -108,56 +127,67 @@ public abstract class PictureUploadTemplate {
         uploadPictureResult.setPicHeight(picHeight);
         uploadPictureResult.setPicScale(picScale);
         uploadPictureResult.setPicFormat(compressedCiObject.getFormat());
+        uploadPictureResult.setPicColor(imageInfo.getAve());
         // 设置缩略图地址
         uploadPictureResult.setThumbnailUrl(cosClientConfig.getHost() + "/" + thumbnailCiObject.getKey());
         // 返回可访问的地址
         return uploadPictureResult;
     }
 
-
-    /**
-     * 校验输入源（本地文件或 URL）
-     */
-    protected abstract void validPicture(Object inputSource);
-
-    /**
-     * 获取输入源的原始文件名
-     */
-    protected abstract String getOriginFilename(Object inputSource);
-
-    /**
-     * 处理输入源并生成本地临时文件
-     */
-    protected abstract void processFile(Object inputSource, File file) throws Exception;
-
     /**
      * 封装返回结果
+     *
+     * @param originalFilename
+     * @param file
+     * @param uploadPath
+     * @param imageInfo        对象存储返回的图片信息
+     * @return
      */
-    private UploadPictureResult buildResult(String originFilename, File file, String uploadPath, ImageInfo imageInfo) {
-        UploadPictureResult uploadPictureResult = new UploadPictureResult();
+    private UploadPictureResult buildResult(String originalFilename, File file, String uploadPath, ImageInfo imageInfo) {
+        // 计算宽高
         int picWidth = imageInfo.getWidth();
         int picHeight = imageInfo.getHeight();
         double picScale = NumberUtil.round(picWidth * 1.0 / picHeight, 2).doubleValue();
-        uploadPictureResult.setPicName(FileUtil.mainName(originFilename));
+        // 封装返回结果
+        UploadPictureResult uploadPictureResult = new UploadPictureResult();
+        uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + uploadPath);
+        uploadPictureResult.setPicName(FileUtil.mainName(originalFilename));
+        uploadPictureResult.setPicSize(FileUtil.size(file));
         uploadPictureResult.setPicWidth(picWidth);
         uploadPictureResult.setPicHeight(picHeight);
         uploadPictureResult.setPicScale(picScale);
         uploadPictureResult.setPicFormat(imageInfo.getFormat());
-        uploadPictureResult.setPicSize(FileUtil.size(file));
-        uploadPictureResult.setUrl(cosClientConfig.getHost() + "/" + uploadPath);
+        uploadPictureResult.setPicColor(imageInfo.getAve());
+        // 返回可访问的地址
         return uploadPictureResult;
     }
 
     /**
-     * 删除临时文件
+     * 清理临时文件
+     *
+     * @param file
      */
     public void deleteTempFile(File file) {
         if (file == null) {
             return;
         }
+        // 删除临时文件
         boolean deleteResult = file.delete();
         if (!deleteResult) {
             log.error("file delete error, filepath = {}", file.getAbsolutePath());
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
