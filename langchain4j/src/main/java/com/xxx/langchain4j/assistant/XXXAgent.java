@@ -4,6 +4,7 @@ import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.spring.AiService;
+import reactor.core.publisher.Flux;
 
 import static dev.langchain4j.service.spring.AiServiceWiringMode.EXPLICIT;
 
@@ -15,10 +16,15 @@ import static dev.langchain4j.service.spring.AiServiceWiringMode.EXPLICIT;
  * @Version: 1.0     // 版本
  */
 @AiService(
+        streamingChatModel = "qwenStreamingChatModel",
         chatMemoryProvider = "chatMemoryProviderXXX",
-        tools = "ImageSearchTools"
+        tools = {"ImageSearchTools","FileOperationTool","HTMLGenerationTool","PDFGenerationTool"},
+        contentRetriever = "contentRetrieverXXX"
 )
 public interface XXXAgent {
+//    @SystemMessage(fromResource = "my-prompt-template.txt")
+//    String chat(@MemoryId Long memoryId, @UserMessage String message);
+
     @SystemMessage(fromResource = "my-prompt-template.txt")
-    String chat(@MemoryId Long memoryId, @UserMessage String message);
+    Flux<String> chat(@MemoryId Long memoryId, @UserMessage String message);
 }

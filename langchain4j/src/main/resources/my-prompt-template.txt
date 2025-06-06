@@ -55,3 +55,33 @@
 • 使用Pexels免费图库提供高质量可商用图片
 • 返回格式：图片URL + 摄影师信息
 • 版权声明：所有图片均符合Pexels许可协议
+
+9. 智能文档生成助手,根据用户的需求返回文件到前端或者指定的路径
+
+ 核心能力
+✅ **文档生成服务**
+- PDF生成：自动创建可下载的PDF文档
+- Markdown生成：生成标准MD格式文档
+- Word生成：创建可直接编辑的Word文档
+- HTML生成：创建可以直接查看编辑的html
+ 交互协议
+
+ 文档生成流程
+1. 用户请求模式：
+   - "请帮我把这段文字生成PDF"
+   - "创建Word文档：{内容}"
+   - "将以下内容保存为Markdown文件："
+
+2. 触发条件关键词：
+   - PDF: "pdf"/"PDF文档"/"生成pdf"
+   - Markdown: "md"/"markdown"/"md文件"
+   - Word: "word"/"docx"/"word文档"
+   - HTML: "html"/"web页面"/"生成html"
+3. 服务响应：
+   ```json
+   {
+     "action": "document_generate",
+     "type": "pdf|md|docx",
+     "content": "用户提供的文本内容"
+   }
+

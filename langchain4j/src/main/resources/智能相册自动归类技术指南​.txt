@@ -1,0 +1,110 @@
+智能相册自动归类技术指南​​
+​​1. 核心价值​​
+实现个人相册的自动场景分类（家庭/旅行/工作）
+支持人脸聚类（基于DeepFace）
+时间线智能生成
+​​2. 技术实现​​
+# 人脸聚类示例
+from deepface import DeepFace
+models = ["VGG-Face", "Facenet", "OpenFace"]
+result = DeepFace.find(img_path, db_path, model_name=models[0])
+​​3. 分类规则设计​​
+类别	判断标准	样例标签
+家庭聚会	多人脸+室内场景+微笑检测	family, indoor, happy
+旅行风景	地理标签+自然景观+单人占比<30%	travel, landscape
+​​4. 性能优化​​
+使用SQLite缓存人脸特征向量
+采用增量学习更新分类模型
+移动端优化：TensorFlow Lite量化模型
+​​2. 电商商品图像识别规范​​
+​​1. 特殊需求​​
+支持白底商品图与场景图的混合处理
+SKU级精确匹配（颜色/款式/型号）
+多角度图像关联
+​​2. 数据增强方案​​
+albumentations.Compose([
+    A.RandomShadow(p=0.3),
+    A.ColorJitter(hue=0.2),
+    A.Perspective(p=0.5)
+])
+​​3. 分类体系示例​​
+graph TD
+    A[服装] --> B[上衣]
+    A --> C[裤装]
+    B --> D["T恤(圆领/V领)"]
+    B --> E["衬衫(休闲/正装)"]
+
+
+
+
+
+​​4. 异常检测​​
+盗图识别：PHash指纹比对
+违规内容：YOLOv5安全检测
+画质评估：BRISQUE算法
+​​3. 医学影像分析实施标准​​
+​​1. 特殊预处理​​
+DICOM格式解析
+窗宽窗位调整
+器官ROI自动分割
+​​2. 标注规范​​
+class Annotation:
+    def __init__(self):
+        self.mask = np.zeros((512,512))  # 病灶区域
+        self.tags = {                    # DICOM标签
+            "StudyDate": "",
+            "BodyPartExamined": ""
+        }
+​​3. 多模型协同​​
+任务	推荐模型	输出要求
+肺部结节检测	nnUNet	3D包围框坐标
+骨折分类	ResNet3D	骨折类型概率分布
+器官分割	SwinUNETR	二值化mask
+​​4. 合规性要求​​
+必须支持匿名化处理
+需记录模型版本和参数
+结果需包含置信度分数
+​​4. 工业质检图像处理手册​​
+​​1. 缺陷检测流程​​
+图像采集 → 亮度归一化 → 纹理分析 → 异常定位 → 缺陷分类
+                   ↑              ↑
+                Gamma校正      Gabor滤波器
+​​2. 代码示例​​
+def detect_defect(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150)
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    return [c for c in contours if cv2.contourArea(c) > min_size]
+​​3. 分类标准​​
+缺陷类型	检测方法	判定阈值
+划痕	方向性梯度分析	长度>5mm
+凹坑	深度图分析	直径>2mm
+污渍	颜色空间异常	面积>10mm²
+​​4. 硬件建议​​
+工业相机：Basler ace系列
+光源：环形LED（波长根据材料选择）
+触发模式：硬触发同步
+​​5. 遥感图像解译技术文档​​
+​​1. 特殊挑战​​
+多光谱通道处理
+大尺寸图像分块
+地理坐标对齐
+​​2. 处理流程​​
+# 分块处理示例
+from rasterio.windows import Window
+with rasterio.open('image.tif') as src:
+    for i in range(0, src.width, 256):
+        for j in range(0, src.height, 256):
+            window = Window(i, j, 256, 256)
+            chunk = src.read(window=window)
+​​3. 地物分类体系​​
+graph LR
+    A[植被] --> A1[林地]
+    A --> A2[农田]
+    B[人工建筑] --> B1[住宅]
+    B --> B2[道路]
+
+​​4. 精度验证​​
+混淆矩阵分析
+Kappa系数 > 0.85
+人工抽检比例 ≥ 5%
