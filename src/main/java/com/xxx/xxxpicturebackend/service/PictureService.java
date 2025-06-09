@@ -3,6 +3,7 @@ package com.xxx.xxxpicturebackend.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xxx.xxxpicturebackend.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.xxx.xxxpicturebackend.model.dto.picture.*;
 import com.xxx.xxxpicturebackend.model.entity.domain.Picture;
 import com.xxx.xxxpicturebackend.model.entity.domain.User;
@@ -17,6 +18,8 @@ import java.util.List;
  * @createDate 2024-12-11 20:45:51
  */
 public interface PictureService extends IService<Picture> {
+
+    CreateOutPaintingTaskResponse createPictureOutPaintingTask(CreatePictureOutPaintingTaskRequest createPictureOutPaintingTaskRequest, User loginUser);
 
     /**
      * 校验图片
